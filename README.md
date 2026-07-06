@@ -10,7 +10,7 @@
 
 ## 公開URL
 
-GitHub Pagesで公開予定です。
+GitHub Pagesで公開しています。
 
 https://2727-art.github.io/anju-training/
 
