@@ -47,6 +47,8 @@ export interface SessionPlan {
   missions: Mission[];
   /** time 昇順に整列済みのタイムラインイベント */
   events: TimelineEvent[];
+  /** プラン生成に使ったユーザー設定。称号選定にも使う */
+  options: SessionOptions;
 }
 
 /**

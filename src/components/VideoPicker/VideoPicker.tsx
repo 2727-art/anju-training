@@ -9,6 +9,7 @@ import type { SelectedVideo } from '../../video/videoTypes';
 import { createVideoUrl, revokeVideoUrl } from '../../video/objectUrl';
 import { loadVideoMetadata, validateVideo } from '../../video/videoMetadata';
 import { loadSettings, saveSettings } from '../../app/settings';
+import { FREQUENCY_LABELS, FREQUENCY_ORDER, TONE_LABELS, TONE_ORDER } from '../../app/labels';
 import { ModeSelect } from '../ModeSelect/ModeSelect';
 import './VideoPicker.css';
 
@@ -16,19 +17,12 @@ interface Props {
   onReady: (video: SelectedVideo, modeId: GameModeId, options: SessionOptions) => void;
 }
 
-const TONE_CHOICES: ReadonlyArray<{ value: TonePreference; label: string }> = [
-  { value: 'auto', label: 'おまかせ' },
-  { value: 'gentle', label: 'やさしめ' },
-  { value: 'energetic', label: '元気' },
-  { value: 'focused', label: '集中' },
-  { value: 'calm', label: 'しずか' },
-];
+const TONE_CHOICES: ReadonlyArray<{ value: TonePreference; label: string }> = TONE_ORDER.map(
+  (value) => ({ value, label: TONE_LABELS[value].label }),
+);
 
-const FREQUENCY_CHOICES: ReadonlyArray<{ value: MessageFrequency; label: string }> = [
-  { value: 'low', label: '少なめ' },
-  { value: 'normal', label: 'ふつう' },
-  { value: 'high', label: '多め' },
-];
+const FREQUENCY_CHOICES: ReadonlyArray<{ value: MessageFrequency; label: string }> =
+  FREQUENCY_ORDER.map((value) => ({ value, label: FREQUENCY_LABELS[value].label }));
 
 const ERROR_TEXT: Record<string, string> = {
   'not-portrait': '縦長動画のみ対応しています。高さが幅より大きい動画を選んでください。',

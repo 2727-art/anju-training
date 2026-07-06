@@ -55,7 +55,7 @@ export const supportMessagesV2: CheerMessageTemplate[] = [
   { id: 'f17', text: '完走の景色まであと数歩', phase: 'finish', tone: 'gentle', intensity: 5, tags: ['finish', 'progress'] },
   { id: 'f18', text: 'ここまでの全部が花道になる', phase: 'finish', tone: 'energetic', intensity: 5, tags: ['finish'] },
   { id: 'f19', text: 'ラスト、笑って締めよう', phase: 'finish', tone: 'gentle', intensity: 4, tags: ['finish'] },
-  { id: 'f20', text: 'フィニッシュライン、目前', phase: 'finish', tone: 'energetic', intensity: 5, tags: ['finish'] },
+  { id: 'f20', text: 'ゴール目前、胸を張って', phase: 'finish', tone: 'energetic', intensity: 5, tags: ['finish'] },
   { id: 'f21', text: '最後の呼吸まで丁寧に', phase: 'finish', tone: 'focused', intensity: 4, tags: ['finish', 'breath'] },
   { id: 'f22', text: '今日の物語、クライマックス', phase: 'finish', tone: 'energetic', intensity: 5, tags: ['finish'] },
 
@@ -133,4 +133,5 @@ export const supportMessagesV2: CheerMessageTemplate[] = [
   { id: 'a18', text: '記録より記憶に残る時間を', phase: 'any', tone: 'calm', intensity: 2, tags: ['calm'] },
   { id: 'a19', text: 'ここまでのあなた、ちゃんと見てたよ', phase: 'any', tone: 'gentle', intensity: 3, tags: ['together'] },
   { id: 'a20', text: '完走の先の爽快感、取りに行こう', phase: 'any', tone: 'energetic', intensity: 3, tags: ['progress'] },
+  { id: 'a21', text: '今日のあなたのペース、いい選択だね', phase: 'any', tone: 'gentle', intensity: 2, tags: ['pace'] },
 ];

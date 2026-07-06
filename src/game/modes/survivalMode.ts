@@ -1,4 +1,5 @@
 import type { CreateSessionPlanInput, ModeEngine, SessionPlan } from './types';
+import { defaultSessionOptions } from './types';
 import { buildPhaseWindows } from '../mission/missionGenerator';
 
 /**
@@ -20,6 +21,7 @@ export const survivalMode: ModeEngine = {
       phases: buildPhaseWindows(input.durationSec),
       missions: [],
       events: [],
+      options: { ...defaultSessionOptions, ...input.options },
     };
   },
 };

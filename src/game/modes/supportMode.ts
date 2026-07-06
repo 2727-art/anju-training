@@ -31,6 +31,6 @@ export const supportMode: ModeEngine = {
       messageFrequency: options.messageFrequency,
     });
 
-    return { modeId: 'support', durationSec, phases, missions, events };
+    return { modeId: 'support', durationSec, phases, missions, events, options };
   },
 };
