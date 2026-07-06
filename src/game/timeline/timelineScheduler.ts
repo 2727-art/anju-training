@@ -1,5 +1,5 @@
 import type { Mission } from '../mission/missionTypes';
-import type { PhaseWindow } from '../modes/types';
+import type { MessageFrequency, PhaseWindow, TonePreference } from '../modes/types';
 import type { TimelineEvent } from './timelineTypes';
 import { selectMessage } from '../messages/messageSelector';
 import { phaseAt } from '../mission/missionGenerator';
@@ -9,7 +9,16 @@ export interface BuildTimelineInput {
   phases: PhaseWindow[];
   missions: Mission[];
   rand: () => number;
+  tonePreference?: TonePreference;
+  messageFrequency?: MessageFrequency;
 }
+
+/** 表示頻度ごとのメッセージ間隔（秒） */
+const MESSAGE_INTERVAL: Record<MessageFrequency, number> = {
+  low: 16,
+  normal: 10,
+  high: 6.5,
+};
 
 /** 同時刻の大量発火を避けるための最小イベント間隔（秒） */
 const MIN_GAP = 0.4;
@@ -48,8 +57,9 @@ export function buildTimeline(input: BuildTimelineInput): TimelineEvent[] {
     });
   }
 
-  // 応援メッセージ: 尺に応じた密度（約10秒に1回、最低3件）
-  const messageCount = Math.max(3, Math.round(durationSec / 10));
+  // 応援メッセージ: 尺と表示頻度設定に応じた密度（最低3件）
+  const interval = MESSAGE_INTERVAL[input.messageFrequency ?? 'normal'];
+  const messageCount = Math.max(3, Math.round(durationSec / interval));
   const recentIds: string[] = [];
   for (let i = 0; i < messageCount; i++) {
     const time = (durationSec * (i + 0.5)) / messageCount;
@@ -59,6 +69,7 @@ export function buildTimeline(input: BuildTimelineInput): TimelineEvent[] {
       progress,
       recentIds,
       rand,
+      tonePreference: input.tonePreference,
     });
     recentIds.push(msg.id);
     if (recentIds.length > 8) recentIds.shift();

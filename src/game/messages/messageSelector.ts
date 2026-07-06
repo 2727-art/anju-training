@@ -1,5 +1,5 @@
 import type { CheerMessageTemplate } from './messageTypes';
-import type { SessionPhase } from '../modes/types';
+import type { SessionPhase, TonePreference } from '../modes/types';
 import { messageBank } from './messageBank';
 
 export interface SelectMessageInput {
@@ -9,6 +9,8 @@ export interface SelectMessageInput {
   /** 直近に使ったメッセージID。これらは選ばない */
   recentIds: readonly string[];
   rand: () => number;
+  /** ユーザーが選んだ応援トーン。'auto' または省略でおまかせ */
+  tonePreference?: TonePreference;
   pool?: readonly CheerMessageTemplate[];
 }
 
@@ -25,12 +27,16 @@ export function selectMessage(input: SelectMessageInput): CheerMessageTemplate {
   const pool = input.pool ?? messageBank;
   const target = desiredIntensity(input.progress);
 
+  const tone = input.tonePreference ?? 'auto';
+
   const score = (m: CheerMessageTemplate): number => {
     let s = 0;
     if (m.phase === input.phase) s += 4;
     else if (m.phase === 'any') s += 2;
     else return -1; // 他フェーズ専用は除外
     s += 2 - Math.min(2, Math.abs(m.intensity - target));
+    // トーン指定時は一致を強く優先する（他トーンも完全排除はしない）
+    if (tone !== 'auto' && m.tone === tone) s += 3;
     return s;
   };
 

@@ -29,8 +29,8 @@ const PHASES: readonly (SessionPhase | 'any')[] = [
 const TONES = ['gentle', 'energetic', 'focused', 'calm'] as const;
 
 describe('messageBank 品質', () => {
-  it('100件以上ある', () => {
-    expect(messageBank.length).toBeGreaterThanOrEqual(100);
+  it('200件以上ある（v0.2）', () => {
+    expect(messageBank.length).toBeGreaterThanOrEqual(200);
   });
 
   it('id が重複していない', () => {

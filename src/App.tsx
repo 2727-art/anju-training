@@ -1,6 +1,7 @@
-import { useCallback, useReducer } from 'react';
+import { useCallback, useReducer, useRef } from 'react';
 import { appReducer, initialAppState } from './app/appState';
-import type { GameModeId } from './game/modes/types';
+import type { GameModeId, SessionOptions } from './game/modes/types';
+import { defaultSessionOptions } from './game/modes/types';
 import { getMode } from './game/modes/modeRegistry';
 import type { SelectedVideo } from './video/videoTypes';
 import { revokeVideoUrl } from './video/objectUrl';
@@ -11,13 +12,20 @@ import { ResultScreen } from './components/ResultScreen/ResultScreen';
 
 export default function App() {
   const [state, dispatch] = useReducer(appReducer, initialAppState);
+  // 「もう一度プレイ」でも同じトーン・頻度設定を使うために保持する
+  const optionsRef = useRef<SessionOptions>(defaultSessionOptions);
 
-  const handleReady = useCallback((video: SelectedVideo, modeId: GameModeId) => {
-    const plan = getMode(modeId).createSessionPlan({
-      durationSec: video.metadata.durationSec,
-    });
-    dispatch({ type: 'startSession', video, plan });
-  }, []);
+  const handleReady = useCallback(
+    (video: SelectedVideo, modeId: GameModeId, options: SessionOptions) => {
+      optionsRef.current = options;
+      const plan = getMode(modeId).createSessionPlan({
+        durationSec: video.metadata.durationSec,
+        options,
+      });
+      dispatch({ type: 'startSession', video, plan });
+    },
+    [],
+  );
 
   const handleFinish = useCallback(
     (stats: SessionStats) => {
@@ -32,6 +40,7 @@ export default function App() {
     // 新しいプランを生成してメッセージの並びを変える
     const plan = getMode(state.plan.modeId).createSessionPlan({
       durationSec: state.video.metadata.durationSec,
+      options: optionsRef.current,
     });
     dispatch({ type: 'replay', plan });
   }, [state.video, state.plan]);

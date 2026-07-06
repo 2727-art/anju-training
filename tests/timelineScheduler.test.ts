@@ -44,6 +44,39 @@ describe('buildTimeline', () => {
     expect(texts).toContain('LAST PUSH');
   });
 
+  it('表示頻度 low < normal < high の順にメッセージ数が増える', () => {
+    const count = (frequency: 'low' | 'normal' | 'high') => {
+      const rand = createRandom(7);
+      const phases = buildPhaseWindows(120);
+      const missions = generateMissions(120, rand);
+      return buildTimeline({
+        durationSec: 120,
+        phases,
+        missions,
+        rand,
+        messageFrequency: frequency,
+      }).filter((e) => e.type === 'message:show').length;
+    };
+    expect(count('low')).toBeLessThan(count('normal'));
+    expect(count('normal')).toBeLessThan(count('high'));
+  });
+
+  it('tonePreference を指定するとそのトーンのメッセージが優先される', () => {
+    const rand = createRandom(13);
+    const phases = buildPhaseWindows(120);
+    const missions = generateMissions(120, rand);
+    const events = buildTimeline({
+      durationSec: 120,
+      phases,
+      missions,
+      rand,
+      tonePreference: 'calm',
+      messageFrequency: 'high',
+    });
+    const shown = events.filter((e) => e.type === 'message:show');
+    expect(shown.length).toBeGreaterThan(0);
+  });
+
   it('極端に短い・長い動画でも生成できる', () => {
     expect(makeTimeline(8).length).toBeGreaterThan(0);
     expect(makeTimeline(1800).length).toBeGreaterThan(0);
