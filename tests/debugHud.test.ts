@@ -55,4 +55,19 @@ describe('HUDデバッグモード', () => {
     parseDebugHud('?debugHud=1&phase=push&callout=fever&density=high');
     expect(store.size).toBe(0);
   });
+
+  it('不正なquery値は安全にデフォルトへフォールバックする', () => {
+    const c = parseDebugHud(
+      '?debugHud=1&phase=<script>&callout=explode&density=999&tone=%00',
+    );
+    expect(c).toEqual({
+      enabled: true,
+      phase: 'keep',
+      callout: null,
+      density: 'normal',
+      tone: 'auto',
+    });
+    // 壊れたクエリ文字列でも例外を出さない
+    expect(() => parseDebugHud('?%%%=&&debugHud=1')).not.toThrow();
+  });
 });

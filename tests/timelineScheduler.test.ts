@@ -77,6 +77,17 @@ describe('buildTimeline', () => {
     expect(shown.length).toBeGreaterThan(0);
   });
 
+  it('FINISHカットインがtimeline上に生成され、結果遷移（動画終了）前に発火する', () => {
+    const events = makeTimeline(120);
+    const finish = events.filter(
+      (e) => e.type === 'callout:show' && e.text === 'FINISH',
+    );
+    expect(finish.length).toBe(1);
+    // 終了直前（95%以降）かつ動画終了より前
+    expect(finish[0].time).toBeGreaterThanOrEqual(120 * 0.95);
+    expect(finish[0].time).toBeLessThan(120);
+  });
+
   it('極端に短い・長い動画でも生成できる', () => {
     expect(makeTimeline(8).length).toBeGreaterThan(0);
     expect(makeTimeline(1800).length).toBeGreaterThan(0);
