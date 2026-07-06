@@ -91,6 +91,8 @@ export function buildTimeline(input: BuildTimelineInput): TimelineEvent[] {
   if (finishStart) {
     events.push({ id: nextId(), type: 'callout:show', time: finishStart.startTime, text: 'LAST PUSH' });
   }
+  // 終了直前のFINISH演出（結果画面遷移の直前に出る短い締め）
+  events.push({ id: nextId(), type: 'callout:show', time: durationSec * 0.97, text: 'FINISH' });
 
   events.sort((a, b) => a.time - b.time);
 

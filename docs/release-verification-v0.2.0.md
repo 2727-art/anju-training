@@ -60,6 +60,27 @@ GitHub Release の作成は手動が必要（`docs/github-release-v0.2.0-draft.m
 - npm run ci: 成功（lint / 57テスト / build）
 - サバイバルモード: isEnabled: false / Coming soon / 選択不可を維持
 
+## Public Code View Check（2026-07-06 追記）
+
+| 項目 | 状態 | 確認方法 | メモ |
+|---|---|---|---|
+| Logged-in Code view | 未確認 | Browser | ログインセッションでの目視は未実施 |
+| Incognito Code view | OK | 匿名HTTPフェッチ | 未ログイン状態でリポジトリページを取得し、README / src / tests / docs / LICENSE / .github/workflows のファイル一覧と説明文が表示されることを確認。「空に見える」事象は再現せず |
+| GitHub API contents | OK | API | ルート一覧が正常応答 |
+| Default branch | OK | Browser（匿名） | main |
+| Pages source | OK | Workflow成功実績 | GitHub Actions（deploy-pages）経由で配信 |
+
+## GitHub Release v0.2.0（2026-07-06 追記）
+
+ユーザーが手動で作成し、公開を確認した。
+
+- tag_name: v0.2.0 / name: "v0.2.0 - Message Experience"
+- draft: false / prerelease: false
+- published_at: 2026-07-06T11:23:53Z
+- 本文: `docs/github-release-v0.2.0-draft.md` の内容を反映
+
+これにより v0.3 Release Gate の全条件を満たした。
+
 ## Known Remaining Items
 
 - iPhone Safari実機確認: 未実施

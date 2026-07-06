@@ -24,4 +24,10 @@ describe('サバイバルモード無効維持（v0.2）', () => {
     expect(plan.missions).toEqual([]);
     expect(plan.events).toEqual([]);
   });
+
+  it('v0.3でサバイバル用演出（DANGER/LAST STAND/SURVIVED）が有効化されていない', () => {
+    const plan = survivalMode.createSessionPlan({ durationSec: 120 });
+    // イベント自体が空 = サバイバル演出は一切発火しない
+    expect(plan.events.filter((e) => e.type === 'callout:show')).toEqual([]);
+  });
 });

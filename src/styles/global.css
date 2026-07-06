@@ -40,6 +40,21 @@ button {
   padding-bottom: var(--safe-bottom);
 }
 
+/* 小画面幅（〜360px）: 余白とチップをコンパクトに */
+.is-small-width .picker {
+  padding: 16px 12px;
+  gap: 14px;
+}
+
+.is-small-width .picker-chip {
+  padding: 6px 12px;
+  font-size: 13px;
+}
+
+.is-small-width .picker-title {
+  font-size: 20px;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
