@@ -1,5 +1,6 @@
 import type { TimelineEvent } from '../timeline/timelineTypes';
 import type { Mission } from '../mission/missionTypes';
+import type { MessageTone } from '../messages/messageTypes';
 
 export type GameModeId = 'support' | 'survival';
 
@@ -14,11 +15,29 @@ export interface PhaseWindow {
   endTime: number;
 }
 
+/** 応援トーンの好み。'auto' はフェーズに合わせたおまかせ */
+export type TonePreference = MessageTone | 'auto';
+
+/** 応援メッセージの表示頻度 */
+export type MessageFrequency = 'low' | 'normal' | 'high';
+
+export interface SessionOptions {
+  tonePreference: TonePreference;
+  messageFrequency: MessageFrequency;
+}
+
+export const defaultSessionOptions: SessionOptions = {
+  tonePreference: 'auto',
+  messageFrequency: 'normal',
+};
+
 export interface CreateSessionPlanInput {
   /** 動画の尺（秒） */
   durationSec: number;
   /** 乱数シード。省略時はランダム */
   seed?: number;
+  /** トーン・頻度などのユーザー設定。省略時は defaultSessionOptions */
+  options?: Partial<SessionOptions>;
 }
 
 export interface SessionPlan {
@@ -28,6 +47,8 @@ export interface SessionPlan {
   missions: Mission[];
   /** time 昇順に整列済みのタイムラインイベント */
   events: TimelineEvent[];
+  /** プラン生成に使ったユーザー設定。称号選定にも使う */
+  options: SessionOptions;
 }
 
 /**

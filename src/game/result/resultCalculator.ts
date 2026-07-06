@@ -1,6 +1,7 @@
 import type { SessionPlan } from '../modes/types';
 import type { SessionResult } from './resultTypes';
 import { getMode } from '../modes/modeRegistry';
+import { pickTitle, type TitleContext } from './resultTitles';
 
 /** コンボ・メッセージなど再生中に集計する値 */
 export interface SessionStats {
@@ -8,13 +9,15 @@ export interface SessionStats {
   shownMessageCount: number;
 }
 
-function pickTitle(plan: SessionPlan, stats: SessionStats): string {
-  if (stats.maxCombo >= plan.missions.length && plan.missions.length > 0) {
-    return 'FULL SUPPORT CLEAR';
-  }
-  if (plan.durationSec >= 120) return 'LONG RUN FINISHER';
-  if (stats.maxCombo >= 3) return 'GOOD FLOW';
-  return 'NICE KEEP';
+export function titleContextOf(plan: SessionPlan, stats: SessionStats): TitleContext {
+  return {
+    durationSec: plan.durationSec,
+    missionCount: plan.missions.length,
+    maxCombo: stats.maxCombo,
+    shownMessageCount: stats.shownMessageCount,
+    tonePreference: plan.options.tonePreference,
+    messageFrequency: plan.options.messageFrequency,
+  };
 }
 
 /**
@@ -30,6 +33,6 @@ export function calculateResult(plan: SessionPlan, stats: SessionStats): Session
     missionCount: plan.missions.length,
     messageCount: stats.shownMessageCount,
     maxCombo: stats.maxCombo,
-    title: pickTitle(plan, stats),
+    title: pickTitle(titleContextOf(plan, stats)),
   };
 }

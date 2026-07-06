@@ -58,7 +58,7 @@ export const supportMessages: CheerMessageTemplate[] = [
   { id: 'p06', text: 'ゴールが近づいてきた', phase: 'push', tone: 'energetic', intensity: 4, tags: ['push', 'progress'] },
   { id: 'p07', text: 'きつくなったら呼吸を思い出して', phase: 'push', tone: 'calm', intensity: 3, tags: ['push', 'breath'] },
   { id: 'p08', text: 'その粘り、かっこいい', phase: 'push', tone: 'energetic', intensity: 4, tags: ['push'] },
-  { id: 'p09', text: '残りはもう、消化試合じゃない、ハイライトだ', phase: 'push', tone: 'energetic', intensity: 4, tags: ['push'] },
+  { id: 'p09', text: '残り時間は全部ハイライトだ', phase: 'push', tone: 'energetic', intensity: 4, tags: ['push'] },
   { id: 'p10', text: '自分の限界は自分で決めていい', phase: 'push', tone: 'gentle', intensity: 3, tags: ['push', 'gentle'] },
   { id: 'p11', text: '集中、ここが一番おいしいところ', phase: 'push', tone: 'focused', intensity: 4, tags: ['push', 'focus'] },
   { id: 'p12', text: 'あなたのペースのまま、駆け抜けよう', phase: 'push', tone: 'energetic', intensity: 4, tags: ['push', 'pace'] },

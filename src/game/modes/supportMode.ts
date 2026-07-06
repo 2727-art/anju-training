@@ -1,4 +1,5 @@
 import type { CreateSessionPlanInput, ModeEngine, SessionPlan } from './types';
+import { defaultSessionOptions } from './types';
 import { buildPhaseWindows, generateMissions } from '../mission/missionGenerator';
 import { buildTimeline } from '../timeline/timelineScheduler';
 import { createRandom } from '../../utils/random';
@@ -18,10 +19,18 @@ export const supportMode: ModeEngine = {
     const rand = createRandom(seed);
     const durationSec = input.durationSec;
 
+    const options = { ...defaultSessionOptions, ...input.options };
     const phases = buildPhaseWindows(durationSec);
     const missions = generateMissions(durationSec, rand);
-    const events = buildTimeline({ durationSec, phases, missions, rand });
+    const events = buildTimeline({
+      durationSec,
+      phases,
+      missions,
+      rand,
+      tonePreference: options.tonePreference,
+      messageFrequency: options.messageFrequency,
+    });
 
-    return { modeId: 'support', durationSec, phases, missions, events };
+    return { modeId: 'support', durationSec, phases, missions, events, options };
   },
 };

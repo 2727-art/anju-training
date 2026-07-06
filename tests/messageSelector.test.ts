@@ -34,6 +34,45 @@ describe('selectMessage', () => {
     }
   });
 
+  it('トーン指定時は指定トーンが大半を占める', () => {
+    const rand = createRandom(21);
+    const recentIds: string[] = [];
+    let matched = 0;
+    const total = 30;
+    for (let i = 0; i < total; i++) {
+      const m = selectMessage({
+        phase: 'keep',
+        progress: 0.5,
+        recentIds,
+        rand,
+        tonePreference: 'gentle',
+      });
+      if (m.tone === 'gentle') matched++;
+      recentIds.push(m.id);
+      if (recentIds.length > 8) recentIds.shift();
+    }
+    expect(matched / total).toBeGreaterThan(0.7);
+  });
+
+  it('tonePreference: auto は従来どおり多様なトーンを返す', () => {
+    const rand = createRandom(5);
+    const tones = new Set<string>();
+    const recentIds: string[] = [];
+    for (let i = 0; i < 30; i++) {
+      const m = selectMessage({
+        phase: 'keep',
+        progress: 0.5,
+        recentIds,
+        rand,
+        tonePreference: 'auto',
+      });
+      tones.add(m.tone);
+      recentIds.push(m.id);
+      if (recentIds.length > 8) recentIds.shift();
+    }
+    expect(tones.size).toBeGreaterThanOrEqual(2);
+  });
+
   it('後半ほど desiredIntensity が高くなる', () => {
     expect(desiredIntensity(0)).toBe(1);
     expect(desiredIntensity(0.5)).toBe(3);
