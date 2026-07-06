@@ -1,0 +1,14 @@
+:root {
+  --bg: #0a0e1a;
+  --bg-panel: rgba(16, 24, 44, 0.82);
+  --hud-line: rgba(90, 200, 250, 0.55);
+  --accent: #5ac8fa;
+  --accent-warm: #ffd166;
+  --text: #eaf2ff;
+  --text-dim: #93a4c4;
+  --danger: #ff6b81;
+  --radius: 14px;
+  --hud-shadow: 0 0 12px rgba(90, 200, 250, 0.35);
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}

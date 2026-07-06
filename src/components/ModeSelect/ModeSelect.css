@@ -1,0 +1,41 @@
+.mode-select {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mode-card {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: left;
+  padding: 16px;
+  min-height: 64px;
+  border-radius: var(--radius);
+  border: 1px solid var(--hud-line);
+  background: var(--bg-panel);
+  color: var(--text);
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.mode-card.is-selected {
+  border-color: var(--accent);
+  box-shadow: var(--hud-shadow);
+}
+
+.mode-card:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.mode-card-label {
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.mode-card-desc {
+  font-size: 13px;
+  color: var(--text-dim);
+  line-height: 1.5;
+}
