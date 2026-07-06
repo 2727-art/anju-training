@@ -8,6 +8,6 @@ export default defineConfig(({ mode }) => ({
   base: mode === 'production' ? '/anju-training/' : '/',
   test: {
     environment: 'node',
-    include: ['tests/**/*.test.ts'],
+    include: ['tests/**/*.test.{ts,tsx}'],
   },
 })) as never;

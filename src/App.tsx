@@ -1,4 +1,4 @@
-import { useCallback, useReducer, useRef } from 'react';
+import { useCallback, useMemo, useReducer, useRef } from 'react';
 import { appReducer, initialAppState } from './app/appState';
 import type { GameModeId, SessionOptions } from './game/modes/types';
 import { defaultSessionOptions } from './game/modes/types';
@@ -9,6 +9,11 @@ import { calculateResult, type SessionStats } from './game/result/resultCalculat
 import { VideoPicker } from './components/VideoPicker/VideoPicker';
 import { VideoStage } from './components/VideoStage/VideoStage';
 import { ResultScreen } from './components/ResultScreen/ResultScreen';
+import { OrientationBanner } from './components/OrientationBanner/OrientationBanner';
+import { DebugHudScreen } from './components/DebugHud/DebugHudScreen';
+import { parseDebugHud } from './app/debugHud';
+import { viewportClasses } from './app/viewport';
+import { useViewport } from './hooks/useViewport';
 
 export default function App() {
   const [state, dispatch] = useReducer(appReducer, initialAppState);
@@ -50,9 +55,30 @@ export default function App() {
     dispatch({ type: 'pickAnother' });
   }, [state.video]);
 
+  const viewport = useViewport();
+  // HUDデバッグモード（?debugHud=1）。設定はURLのみで、localStorageには保存しない
+  const debugHud = useMemo(
+    () => parseDebugHud(typeof window === 'undefined' ? '' : window.location.search),
+    [],
+  );
+
+  const rootClass = ['app-root', ...viewportClasses(viewport)].join(' ');
+
+  if (debugHud.enabled) {
+    return (
+      <div className={rootClass}>
+        <div className="app-frame">
+          <OrientationBanner />
+          <DebugHudScreen config={debugHud} />
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="app-root">
+    <div className={rootClass}>
       <div className="app-frame">
+        <OrientationBanner />
         {state.screen === 'pick' && <VideoPicker onReady={handleReady} />}
         {state.screen === 'play' && state.video && state.plan && (
           <VideoStage video={state.video} plan={state.plan} onFinish={handleFinish} />

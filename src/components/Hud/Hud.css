@@ -1,3 +1,12 @@
+/*
+ * HUDレイヤー構造:
+ *   .hud-layer-top    上部情報（z: var(--z-hud-top)）
+ *   .hud-layer-side   左右ゲージ・コンボ（z: var(--z-hud-side)）
+ *   .hud-layer-bottom 下部応援メッセージ（z: var(--z-hud-bottom)）
+ *   .hud-callout      中央カットイン（z: var(--z-hud-center)）
+ *   .hud-debug-tag    デバッグ表示（z: var(--z-hud-debug)）
+ * z-index の実値は hudLayers.ts からCSS変数として注入される。
+ */
 .hud {
   position: absolute;
   inset: 0;
@@ -8,7 +17,9 @@
 }
 
 /* ---- 上部 ---- */
-.hud-top {
+.hud-layer-top {
+  grid-row: 1;
+  z-index: var(--z-hud-top);
   padding: calc(var(--safe-top) + 10px) 12px 0;
   display: flex;
   flex-direction: column;
@@ -20,7 +31,7 @@
   justify-content: space-between;
   align-items: center;
   gap: 8px;
-  font-size: 12px;
+  font-size: clamp(10px, 3vw, 12px);
   letter-spacing: 0.1em;
   color: var(--accent);
   text-shadow: var(--hud-shadow);
@@ -59,26 +70,26 @@
 }
 
 .hud-mission-label {
-  font-size: 15px;
+  font-size: clamp(13px, 4vw, 15px);
   font-weight: 700;
 }
 
 /* ---- 左右 ---- */
-.hud-side {
+.hud-layer-side {
   grid-row: 2;
+  grid-column: 1;
+  z-index: var(--z-hud-side);
   display: flex;
   align-items: center;
   padding: 0 10px;
 }
 
 .hud-side-left {
-  grid-column: 1;
   justify-self: start;
 }
 
 .hud-side-right {
   justify-self: end;
-  grid-column: 1;
 }
 
 .hud-combo {
@@ -89,7 +100,7 @@
 }
 
 .hud-combo-num {
-  font-size: 28px;
+  font-size: clamp(22px, 7vw, 28px);
   font-weight: 800;
   color: var(--accent-warm);
 }
@@ -119,22 +130,33 @@
 }
 
 /* ---- 中央カットイン ---- */
+/* 下部応援メッセージを潰さないよう、下側 24% は使わない */
 .hud-callout {
   position: absolute;
-  inset: 0;
+  inset: 10% 0 24% 0;
+  z-index: var(--z-hud-center);
   display: grid;
   place-items: center;
-  font-size: clamp(36px, 12vw, 64px);
+  font-size: clamp(32px, 11vw, 60px);
   font-weight: 900;
   letter-spacing: 0.12em;
   color: var(--text);
   text-shadow: 0 0 18px rgba(90, 200, 250, 0.8);
-  animation: hud-callout 1.4s ease-out forwards;
 }
 
-/* ---- 下部 ---- */
-.hud-bottom {
+.hud-callout.is-animated {
+  animation: hud-callout 1s ease-out forwards;
+}
+
+/* reduced motion: スケール・バウンドなしのフェードのみ */
+.hud-callout.is-static {
+  animation: hud-callout-fade 1s linear forwards;
+}
+
+/* ---- 下部応援メッセージ ---- */
+.hud-layer-bottom {
   grid-row: 3;
+  z-index: var(--z-hud-bottom);
   padding: 0 16px calc(var(--safe-bottom) + 84px);
   display: flex;
   justify-content: center;
@@ -142,16 +164,53 @@
 
 .hud-cheer {
   margin: 0;
-  max-width: 100%;
+  max-width: min(92%, 420px);
   padding: 10px 18px;
   border-radius: var(--radius);
-  background: var(--bg-panel);
+  background: linear-gradient(
+    to top,
+    rgba(10, 14, 26, 0.92),
+    rgba(16, 24, 44, 0.72)
+  );
   border: 1px solid var(--hud-line);
-  font-size: 16px;
+  font-size: clamp(14px, 4.2vw, 16px);
   font-weight: 700;
-  line-height: 1.5;
+  line-height: 1.55;
   text-align: center;
+  /* 2行までを基本とし、自然に折り返す */
+  overflow-wrap: break-word;
   animation: hud-slide-in 0.35s ease-out;
+}
+
+/* ---- デバッグ表示 ---- */
+.hud-debug-tag {
+  position: absolute;
+  top: calc(var(--safe-top) + 4px);
+  left: 6px;
+  z-index: var(--z-hud-debug);
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  color: var(--accent-warm);
+  border: 1px solid var(--accent-warm);
+  border-radius: 4px;
+  padding: 1px 5px;
+  opacity: 0.8;
+}
+
+/* ---- 小画面・低画面高さ ---- */
+@media (max-width: 360px) {
+  .hud-cheer {
+    padding: 8px 12px;
+  }
+}
+
+@media (max-height: 600px) {
+  .hud-gauge {
+    height: 30vh;
+  }
+  .hud-layer-bottom {
+    padding-bottom: calc(var(--safe-bottom) + 68px);
+  }
 }
 
 @keyframes hud-slide-in {
@@ -182,5 +241,33 @@
   }
   100% {
     opacity: 0;
+  }
+}
+
+@keyframes hud-callout-fade {
+  0% {
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  85% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hud-mission,
+  .hud-cheer {
+    animation: none;
+  }
+  .hud-callout.is-animated {
+    animation: hud-callout-fade 1s linear forwards;
+  }
+  .hud-gauge-fill {
+    transition: none;
   }
 }

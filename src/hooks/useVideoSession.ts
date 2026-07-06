@@ -1,6 +1,11 @@
 import { useCallback, useReducer } from 'react';
 import type { SessionPhase } from '../game/modes/types';
 import type { TimelineEvent } from '../game/timeline/timelineTypes';
+import {
+  kindOfCalloutText,
+  shouldReplaceCallout,
+  type Callout,
+} from '../game/hud/calloutQueue';
 
 export interface HudState {
   phase: SessionPhase;
@@ -10,7 +15,7 @@ export interface HudState {
   combo: number;
   maxCombo: number;
   gauge: number;
-  callout: string | null;
+  callout: Callout | null;
   calloutKey: number;
   shownMessageCount: number;
 }
@@ -30,6 +35,12 @@ const initialHud: HudState = {
 
 type HudAction = { type: 'event'; ev: TimelineEvent } | { type: 'reset' } | { type: 'clearCallout' };
 
+/** 優先度に基づいてカットインを適用する（低優先度は表示中の高優先度を潰さない） */
+function applyCallout(state: HudState, next: Callout): HudState {
+  if (!shouldReplaceCallout(state.callout, next)) return state;
+  return { ...state, callout: next, calloutKey: state.calloutKey + 1 };
+}
+
 function reducer(state: HudState, action: HudAction): HudState {
   if (action.type === 'reset') return initialHud;
   if (action.type === 'clearCallout') return { ...state, callout: null };
@@ -40,12 +51,7 @@ function reducer(state: HudState, action: HudAction): HudState {
     case 'mission:start':
       return { ...state, missionLabel: ev.label };
     case 'mission:clear':
-      return {
-        ...state,
-        missionLabel: null,
-        callout: 'CLEAR',
-        calloutKey: state.calloutKey + 1,
-      };
+      return applyCallout({ ...state, missionLabel: null }, { kind: 'clear', text: 'CLEAR' });
     case 'combo:up': {
       const combo = state.combo + 1;
       return { ...state, combo, maxCombo: Math.max(state.maxCombo, combo) };
@@ -60,7 +66,7 @@ function reducer(state: HudState, action: HudAction): HudState {
         shownMessageCount: state.shownMessageCount + 1,
       };
     case 'callout:show':
-      return { ...state, callout: ev.text, calloutKey: state.calloutKey + 1 };
+      return applyCallout(state, { kind: kindOfCalloutText(ev.text), text: ev.text });
     default:
       return state;
   }

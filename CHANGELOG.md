@@ -1,5 +1,17 @@
 # Changelog
 
+## Unreleased (v0.3-alpha)
+
+- HUDレイヤー整理（z-index一元管理）
+- 中央演出の優先度制御と短時間化（FINISH > LAST PUSH > FEVER > CLEAR）
+- FINISHカットイン追加
+- 下部応援メッセージの可読性改善
+- safe-area・小画面対応強化
+- landscape時の案内表示
+- prefers-reduced-motion対応強化
+- HUDデバッグモード（?debugHud=1、開発用）
+- HUD関連テスト追加
+
 ## v0.2.0
 
 - 応援メッセージを231件へ拡充
