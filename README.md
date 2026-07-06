@@ -27,7 +27,7 @@ https://2727-art.github.io/anju-training/
 実動画での手動確認は `docs/manual-test-checklist-v0.2.md` を参照してください。
 リリース内容は `docs/release-notes-v0.2.md` を参照してください。
 
-現在の安定版は **v0.2.0** です。開発ブランチでは **v0.3-alpha（HUD演出強化）** を進めています（`docs/release-notes-v0.3-alpha.md`）。
+現在の安定版は **v0.2.0** です。**v0.3-alpha（HUD演出強化）** は main に反映済みで、正式版（0.3.0）に向けて実機確認と微調整を進めています（`docs/release-notes-v0.3-alpha.md`）。
 `?debugHud=1` はHUD確認用の開発機能で、通常利用には影響しません。
 サバイバルモードは引き続き Coming soon です（v0.4予定）。
 iPhone Safari / Android Chrome の実機確認は継続対象です。
